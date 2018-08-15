@@ -25,8 +25,9 @@ package dig
 
 import (
 	"fmt"
-	"github.com/gosexy/to"
 	"reflect"
+
+	"github.com/gosexy/to"
 )
 
 /*
