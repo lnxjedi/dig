@@ -24,7 +24,11 @@
 
 package dig
 
-import "fmt"
+import (
+	"fmt"
+	"strconv"
+	"strings"
+)
 
 // InterfaceMap is a type for arbitrary data structures that can be used with
 // dig. The top-level of the value is always a map[string]interface, but
@@ -64,4 +68,32 @@ func (im InterfaceMap) Get(route ...interface{}) interface{} {
 		return err
 	}
 	return i
+}
+
+func makeRoute(r string) []interface{} {
+	elements := strings.Split(r, "/")
+	route := make([]interface{}, len(elements))
+	for i, v := range elements {
+		if idx, err := strconv.Atoi(v); err == nil {
+			route[i] = idx
+		} else {
+			route[i] = v
+		}
+	}
+	return route
+}
+
+// PathGet takes a string route of the form path/to/item, breaks it up into
+// route elements, and returns the value from the route. Numbers are converted
+// to ints for indexing slices.
+func (im InterfaceMap) PathGet(route string) interface{} {
+	return im.Get(makeRoute(route)...)
+}
+
+// PathSet takes a string route of the form path/to/item, breaks it up into
+// route elements, and set the value for the route. Numbers are converted
+// to ints for indexing slices.
+func (im InterfaceMap) PathSet(route string, value interface{}) error {
+	params := append(makeRoute(route), value)
+	return im.Set(params...)
 }
