@@ -59,14 +59,11 @@ func (im InterfaceMap) Set(params ...interface{}) error {
 	return Set(&im, value, route...)
 }
 
-// Get returns an arbitrary interface value, or interface of type error.
+// Get returns an arbitrary interface value.
 func (im InterfaceMap) Get(route ...interface{}) interface{} {
 	var i interface{}
 
-	err := Get(&im, &i, route...)
-	if err != nil {
-		return err
-	}
+	Get(&im, &i, route...)
 	return i
 }
 
